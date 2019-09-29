@@ -8,9 +8,8 @@ const logger = require('./logger');
 const auth = require('./auth');
 const app = new express();
 
-// console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
-// If the NODE_ENV is not defined then the env has default value development
-// console.log(`app: ${app.get('env')}`);
+app.set('view engine', 'pug');
+app.set('views', './views'); // optional configuration
 
 // Middleware
 app.use(express.json()); // Parses the body as json
@@ -38,6 +37,13 @@ const genres = [
     { id: 3, name: 'Funky' },
     { id: 4, name: 'Jazz' }
 ];
+
+app.get('/', (req, res) => {
+    res.render('index', {
+        title: 'Genres Api',
+        message: 'This is the homepage'
+    });
+});
 
 app.get('/api/genres', (req, res) => {
     res.send(genres);
