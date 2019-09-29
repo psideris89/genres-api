@@ -1,0 +1,7 @@
+{
+    "name": "Genres Api - Development",
+    "port": 5000,
+    "mail": {
+        "host": "dev-mail-server"
+    }
+}

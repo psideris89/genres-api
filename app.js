@@ -1,3 +1,5 @@
+const debug = require('debug')('app:startup');
+const config = require('config');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const express = require('express');
@@ -6,12 +8,26 @@ const logger = require('./logger');
 const auth = require('./auth');
 const app = new express();
 
+// console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+// If the NODE_ENV is not defined then the env has default value development
+// console.log(`app: ${app.get('env')}`);
+
 // Middleware
 app.use(express.json()); // Parses the body as json
 app.use(express.urlencoded({ extended: true })); // Serves url unencoded request
 app.use(express.static('public')); // Exposes files e.g. http://localhost:5000/readme.txt
 app.use(helmet());
-app.use(morgan('tiny')); // Logging requests
+
+// Configuration
+debug(`Environment: ${process.env.NODE_ENV || app.get('env')}`);
+debug(`Application Name: ${config.get('name')}`);
+debug(`Mail Server: ${config.get('mail.host')}`);
+debug(`Mail Password: ${config.get('mail.password')}`);
+
+if (app.get('env') === 'development') {
+    app.use(morgan('tiny')); // Logging requests
+    debug('Morgan Enabled');
+}
 
 app.use(logger);
 app.use(auth);
@@ -71,7 +87,6 @@ function validateGenre(genre) {
     return Joi.validate(genre, schema);
 }
 
-const port = process.env.PORT || '5000';
-app.listen(port, () => {
-    console.log(`Listening on port ${port}`);
+app.listen(config.get('port'), () => {
+    debug(`Listening on port ${config.get('port')}`);
 });

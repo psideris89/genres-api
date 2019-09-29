@@ -1,0 +1,7 @@
+{
+    "name": "Genres Api - Staging",
+    "port": 8080,
+    "mail": {
+        "host": "stg-mail-server"
+    }
+}
